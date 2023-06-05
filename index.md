@@ -1,5 +1,5 @@
 
-{% include foo.md %}
+{% include header.md %}
 
 ## Welcome to GitHub Pages
 
