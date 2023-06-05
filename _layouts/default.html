@@ -25,7 +25,8 @@
 					<header>
 						<div markdown="1">
 							<article class="markdown-body">
-								{% include sidebar.md %}
+								{%- capture stuff -%}{% include sidebar.md %}{%- endcapture -%}
+								{{% stuff | markdownify %}}
 							</article>
 						</div>
 					</header>
