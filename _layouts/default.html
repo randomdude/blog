@@ -24,7 +24,8 @@
 				<div class="wrapper">
 					<article class="markdown-body">
 						<div markdown="1">
-							{% include sidebar.md %}
+							{% capture my_include %}{% include sidebar.md %}{% endcapture %}
+							{{ my_include | markdownify }}
 						</div>
 					</article>
 				</div>
