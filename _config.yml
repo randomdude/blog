@@ -1,17 +1,11 @@
 theme: jekyll-theme-time-machine
-linenos: false
 markdown: kramdown
 kramdown:  
   parse_block_html: true
   syntax_highlighter: rouge
   syntax_highlighter_opts:
+    css_class: 'highlight'
     span:
       line_numbers: false
     block:
       line_numbers: false
-
-highlight:
-  linenos: false
-
-highlight_options:
-  linenos: false
