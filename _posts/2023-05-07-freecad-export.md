@@ -22,20 +22,20 @@ So, for example, the 'sides' of the object - these ones -
 
 - require two faces of tabs, both on the downward-facing faces. We specify this in code:
 
-```python {.no-line-numbers}
+```python
 	builder.createTabsByFaceNormal("sidesWithHoles", FreeCAD.Vector( 0, 0, -1))
 ```
 
 Note the vector, specifying a negative Z direction. We can do the same for the other two sides, the front and back, which are modelled as two seperate objects:
 
-```python {.no-line-numbers}
+```python
 	builder.createTabsByFaceNormal("front", FreeCAD.Vector( 0, 0, -1))
 	builder.createTabsByFaceNormal("back",  FreeCAD.Vector( 0, 0, -1))
 ```
 
 And similarly, for these two sides, we can add tabs on the faces that point in either X-direction, so that the lock into the sides.
 
-```python {.no-line-numbers}
+```python
 	for objName in ["front", "back"]:
 		builder.createTabsByFaceNormal(objName, FreeCAD.Vector( +1,  0,  0))
 		builder.createTabsByFaceNormal(objName, FreeCAD.Vector( -1,  0,  0))
@@ -43,7 +43,7 @@ And similarly, for these two sides, we can add tabs on the faces that point in e
 
 And call the `execute` method to create the actual tabs.
 
-```python {.no-line-numbers}
+```python
 	tabbedObjects = builder.execute()
 ```
 
@@ -57,7 +57,7 @@ This yields a nice tabbed object, ready for the laser cutter:
 
 Well, actually, no, we can't use FreeCAD's g-code generation facilities just yet. First, we need to take each peice, and orient it so that it is flat on the Z axis. Fortunately, I've done all the hard work (very badly!), so this is a simple call:
 
-```python {.no-line-numbers}
+```python
 	# Align our tabbed object to the z plane
 	exporter = exportutils(tabbedObjects, builder.material)
 	exporter.rotateAndPositionAllObjectsOnZ()
@@ -72,7 +72,7 @@ This will go from our tabbed object to a flat representation, like this:
 
 Neat, huh? We can then use FreeCAD's CAM code to do the hard work for us
 
-```python {.no-line-numbers}
+```python
 	exporter.execute()
 	exporter.saveGCode()
 ```
@@ -105,7 +105,7 @@ Repetitive tasks are more suited to Jenkins than myself. My present workflow inv
 
 One big feature I'm missing is an intelligent way to reduce wastage. For example, going back to our 2D output above, we can see that the front and back have been placed on end-to-end, meaning that a lot of wood is wasted. While I don't have a nice automated way of optimising this, it _can_ be done manually, so that's what I do. Unfortunately, the tabbing process has renamed all our objects, so we can no longer refer to them by name. Instead, we observe the bounding-box of each object and rotate based on that. Let's modify our code above:
 
-```python {.no-line-numbers}
+```python
 	# Align our tabbed object to the z plane
 	exporter = exportutils(tabbedObjects, builder.material)
 	exporter.rotateAndPositionAllObjectsOnZ()
@@ -127,7 +127,7 @@ The result is much more effecient.
 
 The whole script is reprouced below. There are a few little features I didn't mention, like the ability to specify a 'material', which will be reflected in the laser beam's speed and intensity.
 
-```python {.no-line-numbers}
+```python
 from PySide2 import QtCore
 
 import FreeCAD
