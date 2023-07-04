@@ -2,3 +2,9 @@ theme: jekyll-theme-time-machine
 markdown: kramdown
 kramdown:  
   parse_block_html: true
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    span:
+      line_numbers: false
+    block:
+      line_numbers: false
