@@ -2,7 +2,7 @@ Hi all. Today I thought I'd share my soloution for "building" a FreeCAD object, 
 
 For the purposes of this post, I'll be using a simple enclosure I whipped up for my CheapBMC board. It's designed to fit in a 3.5" drive bay and have a couple of PCBs screwed to it. I'm not going to focus on the enclosure itself, but here's an image to show you what I mean:
 
-![A little boxy thing](images/2023-05-07-source.png)
+![A little boxy thing](/blog/images/2023-05-07-source.png)
 
 This is what I'll refer to as the 'source'. It's what I've designed in FreeCAD and what is stored in Git.
 
@@ -12,13 +12,13 @@ If you've done a lot of lasercutting, you might notice a lack of 'tabs' on the b
 
 Just to make sure you follow, here's a version of the above, with tabs added. I've hidden the front so that you can see what's going on a little better.
 
-![The box above, with tabs](images/2023-05-07-source-tabbed.png)
+![The box above, with tabs](/blog/images/2023-05-07-source-tabbed.png)
 
 To run in an automated 'build time' fashion, it's clear that some code is going to be needed. Fortunately, FreeCAD exposes a rich Python-based scripting engine, and so it is relatively easy to load the LCInterlocking script and run it. We do, however, need to specify the faces which require tabs. It would seem intuitive to do this by listing the name of each face which requires tabs, but unfortunately face names are not stable and do change occasionaly, so I decided on describing these faces instead. I wrote some code that allowed a face to be specified by a combination of the parent object's name, and the direction which the face, uh, faces. We specify the 'narrower' side, and LCInterlocking takes care of not only adding tabs, but also adding the corresponding holes to any objects which it touches.
 
 So, for example, the 'sides' of the object - these ones - 
 
-![Sides](images/2023-05-07-source-sides.png)
+![Sides](/blog/images/2023-05-07-source-sides.png)
 
 - require two faces of tabs, both on the downward-facing faces. We specify this in code:
 ```
@@ -39,7 +39,7 @@ And call the `execute` method to create the actual tabs.
 
 This yields a nice tabbed object, ready for the laser cutter:
 
-![Tabs again!](images/2023-05-07-source-tabbed.png)
+![Tabs again!](/blog/images/2023-05-07-source-tabbed.png)
 
 .. or is it?
 
@@ -58,7 +58,7 @@ Well, actually, no, we can't use FreeCAD's g-code generation facilities just yet
 
 This will go from our tabbed object to a flat representation, like this:
 
-![flattened to Z=0](images/2023-05-07-flattened.png)
+![flattened to Z=0](/blog/images/2023-05-07-flattened.png)
 
 Neat, huh? We can then use FreeCAD's CAM code to do the hard work for us
 
@@ -76,7 +76,7 @@ To try to cut down on the amount of problems like this, the build server will ta
 
 Here, I've rotated the connectors in the moddle by 180 degrees. You can see the old outline in blue, and the new in red.
 
-![ro-ro-rotate your SCART](images/2023-05-07-diff.png)
+![ro-ro-rotate your SCART](/blog/images/2023-05-07-diff.png)
 
 
 ## Building
@@ -110,7 +110,7 @@ One big feature I'm missing is an intelligent way to reduce wastage. For example
 
 The result is much more effecient.
 
-![images/2023-05-07-flattened-optimised.md]
+![Now the front and back are rotated](/blog/images/2023-05-07-flattened-optimised.png)
 
 
 ### Conclusion
