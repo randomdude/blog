@@ -80,6 +80,7 @@ This produces the gcode file we can feed straight to the laser cutter. All done?
 ## Diffing
 
 This is far from a perfect system, and while it may look comprehensive for a trivial example such as this, for complex projects I am left wanting. For example, I would often find that I had hidden an object in FreeCAD and committed to the build server, which would then duly remove that object from the built gcode, and I would be left with a useless cut object.
+
 To try to cut down on the amount of problems like this, the build server will take a screenshot of the result of each build, in a 2D projection, and archive it along with the rest of the build artifacts. Then, on each subsequent build, the build server performs a visual 'diff' with the previous build, to highlight changes. This is done via imagemagick, and yields a result something like this (taken from a more complex project):
 
 Here, I've rotated the connectors in the moddle by 180 degrees. You can see the old outline in blue, and the new in red.
@@ -91,10 +92,10 @@ Here, I've rotated the connectors in the moddle by 180 degrees. You can see the 
 
 It's nice to have a build server that co-ordinates all these things and ensures I am cutting the correct version of the design. It's too easy to make a mistake when cutting manually, a process which involves:
 
-1) Performing tedious 'build-time' tasks such as adding tabs 
-2) Export G-code, ensuring the correct settings (such as speed and laser power) are used
-3) Locating the built G-code and copying to an SD card
-4) Putting the SD card into the laser cutter, and selecting the correct file
+1. Performing tedious 'build-time' tasks such as adding tabs 
+1. Export G-code, ensuring the correct settings (such as speed and laser power) are used
+1. Locating the built G-code and copying to an SD card
+1. Putting the SD card into the laser cutter, and selecting the correct file
 
 Repetitive tasks are more suited to Jenkins than myself. My present workflow involves simply pushing my design to a git repository, where Jenkins builds it. Once the build is complete, I examine the diff myself, and then turn on the laser cutter. The laser cutter has a small 'orange pi' SBC which will then download the latest artifacts for all projects, and at that point I can simply select the project I want to cut on the laser cutter's UI and hit 'OK' to cut.
 
