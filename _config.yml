@@ -9,3 +9,9 @@ kramdown:
       line_numbers: false
     block:
       line_numbers: false
+
+highlight:
+  linenos: false
+
+highlight_options:
+  linenos: false
