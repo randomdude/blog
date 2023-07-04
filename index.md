@@ -1,7 +1,7 @@
 
 {% include header.md %}
 
-## Welcome to GitHub Pages
+## Welcome to my blog
 
 Available posts:
 
