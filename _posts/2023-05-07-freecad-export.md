@@ -22,17 +22,25 @@ So, for example, the 'sides' of the object - these ones -
 
 - require two faces of tabs, both on the downward-facing faces. We specify this in code:
 ```
-	builder.createTabsByFaceNormal("sidesWithHoles", FreeCAD.Vector( 0, 0, -1))```
+	builder.createTabsByFaceNormal("sidesWithHoles", FreeCAD.Vector( 0, 0, -1))
+```
+
 Note the vector, specifying a negative Z direction. We can do the same for the other two sides, the front and back, which are modelled as two seperate objects:
+
 ```
 	builder.createTabsByFaceNormal("front", FreeCAD.Vector( 0, 0, -1))
-	builder.createTabsByFaceNormal("back",  FreeCAD.Vector( 0, 0, -1))```
+	builder.createTabsByFaceNormal("back",  FreeCAD.Vector( 0, 0, -1))
+```
+
 And similarly, for these two sides, we can add tabs on the faces that point in either X-direction, so that the lock into the sides.
 ```
 	for objName in ["front", "back"]:
 		builder.createTabsByFaceNormal(objName, FreeCAD.Vector( +1,  0,  0))
-		builder.createTabsByFaceNormal(objName, FreeCAD.Vector( -1,  0,  0))```
+		builder.createTabsByFaceNormal(objName, FreeCAD.Vector( -1,  0,  0))
+```
+
 And call the `execute` method to create the actual tabs.
+
 ```
 	tabbedObjects = builder.execute()
 	```
