@@ -195,6 +195,8 @@ except Exception as e:
 	FreeCADGui.getMainWindow().deleteLater()
 ```
 
+The bulk of the logic is in the `exportutils` script, which I've made available on GitHub [here](https://github.com/randomdude/freecad-scripts).
+
 
 ### Conclusion
 
