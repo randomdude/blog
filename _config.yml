@@ -1,4 +1,5 @@
 theme: jekyll-theme-time-machine
+linenos: false
 markdown: kramdown
 kramdown:  
   parse_block_html: true
