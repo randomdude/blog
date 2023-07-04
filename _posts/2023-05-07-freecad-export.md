@@ -21,6 +21,7 @@ So, for example, the 'sides' of the object - these ones -
 ![Sides](/blog/images/2023-05-07-source-sides.png)
 
 - require two faces of tabs, both on the downward-facing faces. We specify this in code:
+
 ```
 	builder.createTabsByFaceNormal("sidesWithHoles", FreeCAD.Vector( 0, 0, -1))
 ```
@@ -33,6 +34,7 @@ Note the vector, specifying a negative Z direction. We can do the same for the o
 ```
 
 And similarly, for these two sides, we can add tabs on the faces that point in either X-direction, so that the lock into the sides.
+
 ```
 	for objName in ["front", "back"]:
 		builder.createTabsByFaceNormal(objName, FreeCAD.Vector( +1,  0,  0))
@@ -43,7 +45,7 @@ And call the `execute` method to create the actual tabs.
 
 ```
 	tabbedObjects = builder.execute()
-	```
+```
 
 This yields a nice tabbed object, ready for the laser cutter:
 
@@ -120,6 +122,78 @@ One big feature I'm missing is an intelligent way to reduce wastage. For example
 The result is much more effecient.
 
 ![Now the front and back are rotated](/blog/images/2023-05-07-flattened-optimised.png)
+
+## The whole script
+
+The whole script is reprouced below. There are a few little features I didn't mention, like the ability to specify a 'material', which will be reflected in the laser beam's speed and intensity.
+
+```
+from PySide2 import QtCore
+
+import FreeCAD
+import FreeCADGui
+
+import BOPTools.SplitFeatures
+import Part
+
+from lasercut.tabproperties import TabProperties
+
+from exportutils import *
+
+import math
+import os
+
+def main():
+	doc = FreeCAD.ActiveDocument
+	doc.recompute()
+
+	builder = tabbedObjectBuilder(["front", "back", "bottomWithHoles", "sidesWithHoles"], cutterMaterial.bamboo(3))
+
+	# Now we must add any faces which we want to process. 
+
+	# We want the downward faces on the case sides. Note the large tabs on the sides - this is to try to put as much support material around
+	# the holes as we can.
+	builder.createTabsByFaceNormal("front", FreeCAD.Vector( 0, 0, -1), tabWidth = 5, tabNumber = 5)
+	builder.createTabsByFaceNormal("back", FreeCAD.Vector( 0, 0, -1), tabWidth = 5, tabNumber = 5)
+	builder.createTabsByFaceNormal("sidesWithHoles", FreeCAD.Vector( 0, 0, -1), tabWidth = 47, tabNumber = 2)
+	if len(builder.getFaces()) != 4:
+		raise Exception("Did not find Z-pointing face on case bottom to add tabs to")
+
+	# Now sideways (x-ward) facing faces on the case bottom and top.
+	for objName in ["front", "back"]:
+		builder.createTabsByFaceNormal(objName, FreeCAD.Vector( +1,  0,  0), tabWidth = 5)
+		builder.createTabsByFaceNormal(objName, FreeCAD.Vector( -1,  0,  0), tabWidth = 5)
+
+	if len(builder.getFaces()) != 8:
+		raise Exception("Did not find x-pointing faces on case sides to add tabs to")
+
+	# Make the tabs..
+	tabbedObjects = builder.execute()
+
+	# Align our tabbed object to the z plane
+	exporter = exportutils(tabbedObjects, builder.material)
+	exporter.rotateAndPositionAllObjectsOnZ()
+
+	# Rotate the two supports so the result causes less wastage
+	for obj in tabbedObjects:
+		if obj.Shape.BoundBox.YLength < 40:
+			obj.Placement.Rotation = obj.Placement.Rotation.multiply(FreeCAD.Rotation(FreeCAD.Base.Vector(0,1,0),90))
+
+	# Now we can place our objects one after another, in a neat row.
+	exporter.placeInRow(tabbedObjects, startPosX = 10, startPosY = 10)
+
+	# Finally, we can use the CAM code to generate some gcode and export the results.
+	exporter.execute()
+	exporter.saveGCode()
+	exporter.saveScreenshotOfPath()
+
+try:
+	main()
+	FreeCADGui.getMainWindow().deleteLater()
+except Exception as e:
+	FreeCAD.Console.PrintError(str(e) + "\n")
+	FreeCADGui.getMainWindow().deleteLater()
+```
 
 
 ### Conclusion
