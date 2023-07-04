@@ -127,7 +127,7 @@ The result is much more effecient.
 
 The whole script is reprouced below. There are a few little features I didn't mention, like the ability to specify a 'material', which will be reflected in the laser beam's speed and intensity.
 
-```
+```python?line_numbers=false
 from PySide2 import QtCore
 
 import FreeCAD
